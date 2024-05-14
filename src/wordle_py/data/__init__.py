@@ -16,8 +16,9 @@ def get_data() -> pd.DataFrame:
     data_added = []
     with open(data_path, "r") as words:
         for i in words:
-            temp = [i.strip()]
-            temp.extend(list(i.strip()))
+            word = i.upper().strip()
+            temp = [word]
+            temp.extend(list(word))
             data_added.append(temp)
 
     index_key = "word"

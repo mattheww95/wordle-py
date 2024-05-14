@@ -21,13 +21,14 @@ class Renderer:
         """
         Print guess to screen
         """
-
+        print("#####")
         for guess in self.guesses:
             print(guess)
 
     def game_loop(self):
         guesses = 0
         while guesses < self.guess_limit:
+            print("Selected Letters", self.__words.get_alphabet())
             self.get_guess()
             if self.__words.matched or guesses == self.guess_limit -1:
                 end_message = "You got the word!" if self.__words.matched else f"Sorry, the word to guess was {self.__words.word}"
@@ -43,7 +44,7 @@ class Renderer:
         input_passed: Optional[str] = None
 
         while input_passed is None:
-            usr_input = input("Enter a guess: ")
+            usr_input = input("Enter a guess: ").upper()
             if self.__words.word_len != len(usr_input):
                 equality = "short" if self.__words.word_len > len(usr_input) else "long"
                 print(f"Guess {usr_input} is too {equality}. Please guess a word of length {self.__words.word_len}")
