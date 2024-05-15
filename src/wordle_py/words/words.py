@@ -19,9 +19,9 @@ class Words:
         self.words = data.get_data()
         self.word = self.__word_init()
         self.word_len = len(self.word)
-        self.characters: list[str] = set([i for i in self.word])
+        self.characters: set[str] = set([i for i in self.word])
         self.guesses = []
-        self.alphabet_string = {chr(i): Fore.RESET for i in range(65,90)}
+        self.alphabet_string = {chr(i): Style.RESET_ALL for i in range(65,91)}
         self.matched = False
     
     def __len__(self) -> int:

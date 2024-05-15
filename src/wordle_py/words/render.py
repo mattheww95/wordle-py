@@ -44,11 +44,12 @@ class Renderer:
         input_passed: Optional[str] = None
 
         while input_passed is None:
-            usr_input = input("Enter a guess: ").upper()
+            usr_input = input(f"Enter a guess ({self.__words.word_len} characters): ").upper()
             if self.__words.word_len != len(usr_input):
                 equality = "short" if self.__words.word_len > len(usr_input) else "long"
                 print(f"Guess {usr_input} is too {equality}. Please guess a word of length {self.__words.word_len}")
-
+            elif not set(usr_input).issubset(self.__words.alphabet_string.keys()):
+                print(f"Invalid characters entered, Please only enter wors containing the following characters {''.join(self.__words.alphabet_string.keys())}")
             elif not self.__words.word_exists(usr_input):
                 print(f"Word entered {usr_input} is not a valid word.")
             else:
