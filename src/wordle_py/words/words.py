@@ -4,7 +4,7 @@ Select and query words for look up.
 2024-05-10: Matthew Wells
 """
 from colorama import Fore, Style, Back
-from typing import Optional
+from typing import Optional, List
 from wordle_py import data
 from random import randrange, seed
 
@@ -36,7 +36,7 @@ class Words:
         """
         return "".join(self.random_word())
 
-    def random_word(self) -> list[str]:
+    def random_word(self) -> List[str]:
         """
         Select a random word from the corpus
         """
@@ -75,16 +75,6 @@ class Words:
                 return_string.append(q)
         return_string.append(Style.RESET_ALL)
         return "".join(return_string)
-
-
-
-
-
-
-
-
-
-
 
 
 

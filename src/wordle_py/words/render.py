@@ -4,7 +4,7 @@ Render the word displayed
 import sys
 from colorama import just_fix_windows_console
 from wordle_py.words.words import Words
-from typing import Optional
+from typing import Optional, List
 
 class Renderer:
     """
@@ -17,11 +17,11 @@ class Renderer:
         self.guess_limit = self.__words.word_len
         self.guesses = []
 
-    def print_guesses(self, guesses: list[str]) -> None:
+    def print_guesses(self, guesses: List[str]) -> None:
         """
         Print guess to screen
         """
-        print("#####")
+        print(f"Guesses that remain: {self.guess_limit - len(self.guesses)}")
         for guess in self.guesses:
             print(guess)
 

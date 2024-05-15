@@ -7,7 +7,7 @@ def words():
     return Words(seed_value=42)
 
 
-selected_words ="buzzy"
+selected_words ="buzzy".upper()
 
 def test_random_word(words):
     rnd_words = words.random_word()

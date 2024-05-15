@@ -27,13 +27,13 @@ classifiers = [
 dependencies = [
   "click",
   "pandas",
-  "colorama"
+  "colorama==0.4.6"
 ]
 
 [project.urls]
-Documentation = "https://github.com/unknown/wordle-py#readme"
-Issues = "https://github.com/unknown/wordle-py/issues"
-Source = "https://github.com/unknown/wordle-py"
+Documentation = "https://github.com/mattheww95/wordle-py#readme"
+Issues = "https://github.com/mattheww95/wordle-py/issues"
+Source = "https://github.com/mattheww95/wordle-py"
 
 [project.scripts]
 wordle-py = "wordle_py.cli:wordle_py"
