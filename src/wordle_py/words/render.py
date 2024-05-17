@@ -65,7 +65,8 @@ class Renderer:
         """
         usr_input = self.get_input()
         test_value = self.__words.guess(usr_input)
-        self.guesses.append(test_value)
+        term_string = self.__words.terminal_string(test_value)
+        self.guesses.append(term_string)
         self.print_guesses(self.guesses)
 
 if __name__ == "__main__":

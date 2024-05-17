@@ -4,9 +4,17 @@ Select and query words for look up.
 2024-05-10: Matthew Wells
 """
 from colorama import Fore, Style, Back
-from typing import Optional, List
+from typing import Optional, List, Tuple
 from wordle_py import data
 from random import randrange, seed
+from functools import partial
+from enum import Enum, auto
+
+
+class Status(Enum):
+    CORRECT = auto()
+    CONTAINED = auto()
+    WRONG = auto()
 
 
 class Words:
@@ -53,8 +61,33 @@ class Words:
             return False
         return True
 
+    def terminal_string(self, values: List[Tuple[str, Status]]):
+        """
+        Create the string for the terminal
+        """
+        terminal_colours = {
+                Status.CORRECT: partial(self.__format_string, 
+                                        style=Style.BRIGHT,
+                                        colour=Fore.GREEN),
+                Status.CONTAINED: partial(self.__format_string,
+                                          style=Style.BRIGHT,
+                                          colour=Fore.YELLOW),
+                Status.WRONG: partial(self.__format_string,
+                                      style=Style.RESET_ALL,
+                                      colour=Style.RESET_ALL)
+        }
+
+        return f"{''.join([terminal_colours[i[1]](value=i[0]) for i in values])}{Style.RESET_ALL}"
+
     
-    def guess(self, string: str) -> str:
+    @staticmethod
+    def __format_string(style, colour, value) -> str:
+        """
+        """
+        return f"{style}{colour}{value}{Style.RESET_ALL}"
+
+    
+    def guess(self, string: str) -> List[Tuple[str, Status]]:
         """
         Return a coloured string to display to the screen
         """
@@ -66,15 +99,14 @@ class Words:
         for q, v in zip(string, self.word):
             if q == v:
                 self.alphabet_string[q] = f"{Style.BRIGHT}{Fore.YELLOW}"
-                return_string.append(f"{Style.BRIGHT}{Fore.GREEN}{q}{Style.RESET_ALL}")
+                return_string.append((q, Status.CORRECT))
             elif q in self.characters:
                 self.alphabet_string[q] = f"{Style.BRIGHT}{Fore.YELLOW}"
-                return_string.append(f"{Style.BRIGHT}{Fore.YELLOW}{q}{Style.RESET_ALL}")
+                return_string.append((q, Status.CONTAINED))
             else:
                 self.alphabet_string[q] = f"{Style.BRIGHT}{Fore.CYAN}"
-                return_string.append(q)
-        return_string.append(Style.RESET_ALL)
-        return "".join(return_string)
+                return_string.append((q, Status.WRONG))
+        return return_string
 
 
 
