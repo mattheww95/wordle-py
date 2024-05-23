@@ -94,7 +94,8 @@ class Words:
 
         if string == self.word:
             self.matched = True
-            return Fore.GREEN + string + Style.RESET_ALL
+            #return Fore.GREEN + string + Style.RESET_ALL
+            return [(i, Status.CORRECT) for i in string]
         return_string = []
         for q, v in zip(string, self.word):
             if q == v:
