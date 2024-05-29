@@ -16,13 +16,13 @@ class QuerySolver:
 
     def __init__(self, words: Words) -> None:
         self.words_obj = words
+        self.data = self.words_obj.words.copy(deep=True)
 
-    def select_word(self, words: Optional[Words]=None) -> str:
+    def select_word(self, words: Optional[pd.DataFrame]=None) -> str:
         """
         Select an initial start word
         """
-
-        data = self.words_obj.words if words is None else words.words
+        data = self.data if words is None else self.data
         start_word = None
         for idx in data.index:
             if len(idx) == len(set(idx)):
@@ -31,16 +31,12 @@ class QuerySolver:
         start_word = idx
         return start_word
 
-    def process_guess(self, guess: List[Tuple[str, Status]], words: Optional[Words]=None) -> Optional[pd.DataFrame]:
-        """
-        Process a guess to determine to filter the word list
-        """
-        data = self.words_obj.words if words is None else words.words
-        bool_list = [True if i[1] == Status.CORRECT else False for i in guess]
-        if all(bool_list):
-            print(f"word found! {guess}")
-            return None
 
+    def update_dataframe(self, guess: List[Tuple[str, Status]], data_in: Optional[pd.DataFrame]=None):
+        """
+        update the dataframe for the updated test
+        """
+        data = self.data if data_in is None else data_in
         data.drop(index="".join([i[0] for i in guess]), inplace=True)
         for k, v in enumerate(guess):
             status = v[1]
@@ -53,20 +49,24 @@ class QuerySolver:
                 data = data[data[k] == letter]
         return data
 
-    def solve_word(self):
+    def solve_word(self) -> str:
         """
         solver the wordle word
         """
-        while not self.words_obj.matched:
-            guess_word = self.select_word()
-            guess_out = self.words_obj.guess(guess_word)
-            self.words_obj.words = self.process_guess(guess_out)
-
-
+        guesses = 0
+        while True:
+            guess_word = self.select_word(self.data)
+            guess_out = self.words_obj.guess(guess_word, False)
+            if self.words_obj.word_correct(guess_out):
+                break
+            self.data = self.update_dataframe(guess_out, self.data)
+            guesses += 1
+        return f"Program {self.__class__.__name__} solved puzzle in {guesses} guesses"
 
 
 if __name__ == "__main__":
     words = Words(42)
     qs = QuerySolver(words)
-    qs.solve_word()
+    out_str = qs.solve_word()
+    print(out_str)
 

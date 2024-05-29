@@ -21,17 +21,15 @@ class Words:
     """
     Query words for usage and look them up where needed
     """
-
+    __capital_letters_range = range(65,91)
     def __init__(self, seed_value: Optional[int]=None) -> None:
         self.seed = seed_value
         self.words = data.get_data()
         self.word = self.__word_init()
         self.word_len = len(self.word)
         self.characters: set[str] = set([i for i in self.word])
-        self.guesses = []
-        self.alphabet_string = {chr(i): Style.RESET_ALL for i in range(65,91)}
-        self.matched = False
-    
+        self.alphabet_string = {chr(i): Style.RESET_ALL for i in self.__capital_letters_range}
+
     def __len__(self) -> int:
         return len(self.words)
 
@@ -61,6 +59,14 @@ class Words:
             return False
         return True
 
+    def word_correct(self, guess: List[Tuple[str, Status]]) -> bool:
+        """
+        """
+        bool_list = [True if i[1] == Status.CORRECT else False for i in guess]
+        if all(bool_list):
+            return True
+        return False
+
     def terminal_string(self, values: List[Tuple[str, Status]]):
         """
         Create the string for the terminal
@@ -87,26 +93,27 @@ class Words:
         return f"{style}{colour}{value}{Style.RESET_ALL}"
 
     
-    def guess(self, string: str) -> List[Tuple[str, Status]]:
+    def guess(self, string: str, update_colours: bool=True) -> List[Tuple[str, Status]]:
         """
         Return a coloured string to display to the screen
         """
 
         if string == self.word:
-            self.matched = True
-            #return Fore.GREEN + string + Style.RESET_ALL
             return [(i, Status.CORRECT) for i in string]
         return_string = []
         for q, v in zip(string, self.word):
+            coloured_string = None
             if q == v:
-                self.alphabet_string[q] = f"{Style.BRIGHT}{Fore.YELLOW}"
+                coloured_string = f"{Style.BRIGHT}{Fore.YELLOW}"
                 return_string.append((q, Status.CORRECT))
             elif q in self.characters:
-                self.alphabet_string[q] = f"{Style.BRIGHT}{Fore.YELLOW}"
+                coloured_string = f"{Style.BRIGHT}{Fore.YELLOW}"
                 return_string.append((q, Status.CONTAINED))
             else:
-                self.alphabet_string[q] = f"{Style.BRIGHT}{Fore.CYAN}"
+                coloured_string = f"{Style.BRIGHT}{Fore.CYAN}"
                 return_string.append((q, Status.WRONG))
+            if update_colours:
+                self.alphabet_string[q] = coloured_string
         return return_string
 
 

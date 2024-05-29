@@ -29,9 +29,9 @@ class Renderer:
         guesses = 0
         while guesses < self.guess_limit:
             print("Selected Letters", self.__words.get_alphabet())
-            self.get_guess()
-            if self.__words.matched or guesses == self.guess_limit -1:
-                end_message = "You got the word!" if self.__words.matched else f"Sorry, the word to guess was {self.__words.word}"
+            matched = self.get_guess()
+            if matched or guesses == self.guess_limit -1:
+                end_message = "You got the word!" if matched else f"Sorry, the word to guess was {self.__words.word}"
                 print(end_message)
                 sys.exit(0)
             guesses += 1
@@ -65,9 +65,12 @@ class Renderer:
         """
         usr_input = self.get_input()
         test_value = self.__words.guess(usr_input)
+        if self.__words.word_correct(test_value):
+            return True
         term_string = self.__words.terminal_string(test_value)
         self.guesses.append(term_string)
         self.print_guesses(self.guesses)
+        return False
 
 if __name__ == "__main__":
     selection = Words(seed_value=42)
